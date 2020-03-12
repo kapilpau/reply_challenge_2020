@@ -29,7 +29,8 @@ try {
             bonus: dev[1],
             skills: dev.splice(3),
             type: 'D',
-            id: i - 1
+            id: i - 1,
+            position: "X"
         })
     }
 
@@ -42,7 +43,8 @@ try {
             company: mgr[0],
             bonus: mgr[1],
             type: 'M',
-            id: i - 1
+            id: i - 1,
+            position: "X"
         });
     }
 
