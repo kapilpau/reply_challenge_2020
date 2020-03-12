@@ -7,7 +7,6 @@ let mgrs = [];
 
 let MAP = []; // Will be an Array of Arrays (2D Array effectively)
 
-
 try {
     // read contents of the file
     const data = fs.readFileSync(args[0], 'UTF-8');
@@ -48,6 +47,13 @@ try {
         });
     }
 
+
+    const logger = fs.createWriteStream('out.txt', {
+        flags: 'a'
+    });
+
+    devs.forEach(dev => logger.write(dev.position + "\r\n"));
+    mgrs.forEach(mgr => logger.write(mgr.position + "\r\n"));
 } catch (err) {
     console.error(err);
 }
