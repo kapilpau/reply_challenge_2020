@@ -46,9 +46,9 @@ try {
         mgrs.push({
             company: mgr[0],
             bonus: mgr[1],
-            type: 'M',
             id: 'M' + i - 1,
-            position: "X"
+            positionX: Number.MIN_SAFE_INTEGER,
+            positionY: Number.MIN_SAFE_INTEGER
         });
     }
 
