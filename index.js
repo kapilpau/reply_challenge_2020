@@ -166,19 +166,13 @@ function create_map(r, c, lines){
         }
     }
 
-    // console.log(map);
-    // console.log("MAN_SPACES = ", MAN_SPACES);
-    // console.log("DEV_SPACES = ", DEV_SPACES);
+    console.log(map);
+    console.log("MAN_SPACES = ", MAN_SPACES);
+    console.log("DEV_SPACES = ", DEV_SPACES);
     return map;
 }
 
 function allocate(){
-    let MAX_I = Math.max(MAN_SPACES.length, DEV_SPACES.length);
-    let greater_arr = MAN_SPACES.length > DEV_SPACES.length ? MAN_SPACES : DEV_SPACES;
-    let MIN_J = Math.min(MAN_SPACES.length, DEV_SPACES.length);
-    let lesser_arr = MAN_SPACES.length < DEV_SPACES.length ? MAN_SPACES : DEV_SPACES;
-
-    // TODO seated
 
     // All devs
     for(let i = 0; i < DEV_SPACES.length; i++){
@@ -195,10 +189,17 @@ function allocate(){
                     // NOTE: Contains only works for strings after JS2016. Else use indexOf()
                     if(!data.used && data.person1.includes('D') && data.person2.includes('D')){
                         data['used'] = true;
-                        devs[data.person1.substring(1)].positionX = coords1[0]
-                        devs[data.person1.substring(1)].positionY = coords1[1]
-                        devs[data.person2.substring(1)].positionX = coords2[0]
-                        devs[data.person2.substring(1)].positionY = coords2[1]
+                        let p1 = devs[data.person1.substring(1)];
+                        let p2 = devs[data.person2.substring(1)];
+                        if(p1.positionY === Number.MIN_SAFE_INTEGER){
+                            p1.positionX = coords1[0];
+                            p1.positionY = coords1[1];
+                        }
+
+                        if(p2.positionY === Number.MIN_SAFE_INTEGER){
+                            p2.positionX = coords2[0];
+                            p2.positionY = coords2[1];
+                        }
                         data['p1'] = coords1;
                         data['p2'] = coords2;
                         break;
@@ -216,10 +217,17 @@ function allocate(){
                     // NOTE: Contains only works for strings after JS2016. Else use indexOf()
                     if(!data.used && data.person1.includes('D') && data.person2.includes('M')){
                         data['used'] = true;
-                        devs[data.person1.substring(1)].positionX = coords1[0]
-                        devs[data.person1.substring(1)].positionY = coords1[1]
-                        mgrs[data.person2.substring(1)].positionX = coords2[0]
-                        mgrs[data.person2.substring(1)].positionY = coords2[1]
+                        let p1 = devs[data.person1.substring(1)];
+                        let p2 = mgrs[data.person2.substring(1)];
+                        if(p1.positionY === Number.MIN_SAFE_INTEGER){
+                            p1.positionX = coords1[0];
+                            p1.positionY = coords1[1];
+                        }
+
+                        if(p2.positionY === Number.MIN_SAFE_INTEGER){
+                            p2.positionX = coords2[0];
+                            p2.positionY = coords2[1];
+                        }
                         data['p1'] = coords1;
                         data['p2'] = coords2;
                         break;
@@ -244,10 +252,17 @@ function allocate(){
                     // NOTE: Contains only works for strings after JS2016. Else use indexOf()
                     if(!data.used && data.person1.includes('M') && data.person2.includes('D')){
                         data['used'] = true;
-                        mgrs[data.person1.substring(1)].positionX = coords1[0]
-                        mgrs[data.person1.substring(1)].positionY = coords1[1]
-                        devs[data.person2.substring(1)].positionX = coords2[0]
-                        devs[data.person2.substring(1)].positionY = coords2[1]
+                        let p1 = mgrs[data.person1.substring(1)];
+                        let p2 = devs[data.person2.substring(1)];
+                        if(p1.positionY === Number.MIN_SAFE_INTEGER){
+                            p1.positionX = coords1[0];
+                            p1.positionY = coords1[1];
+                        }
+
+                        if(p2.positionY === Number.MIN_SAFE_INTEGER){
+                            p2.positionX = coords2[0];
+                            p2.positionY = coords2[1];
+                        }
                         data['p1'] = coords1;
                         data['p2'] = coords2;
                         break;
@@ -265,10 +280,17 @@ function allocate(){
                     // NOTE: Contains only works for strings after JS2016. Else use indexOf()
                     if(!data.used && data.person1.includes('M') && data.person2.includes('M')){
                         data['used'] = true;
-                        mgrs[data.person1.substring(1)].positionX = coords1[0]
-                        mgrs[data.person1.substring(1)].positionY = coords1[1]
-                        mgrs[data.person2.substring(1)].positionX = coords2[0]
-                        mgrs[data.person2.substring(1)].positionY = coords2[1]
+                        let p1 = mgrs[data.person1.substring(1)];
+                        let p2 = mgrs[data.person2.substring(1)];
+                        if(p1.positionY === Number.MIN_SAFE_INTEGER){
+                            p1.positionX = coords1[0];
+                            p1.positionY = coords1[1];
+                        }
+
+                        if(p2.positionY === Number.MIN_SAFE_INTEGER){
+                            p2.positionX = coords2[0];
+                            p2.positionY = coords2[1];
+                        }
                         data['p1'] = coords1;
                         data['p2'] = coords2;
                         break;
@@ -280,60 +302,9 @@ function allocate(){
 
 
     // console.log(SCORE_BOARD);
-    // console.log(is_adjacent(MAN_SPACES[0], DEV_SPACES[0])); // true
+    console.log('check' , is_adjacent(MAN_SPACES[0], MAN_SPACES[0])); // true
     // console.log(is_adjacent(MAN_SPACES[1], DEV_SPACES[1])); // false
     // console.log(is_adjacent(MAN_SPACES[1], DEV_SPACES[2])); // true
-}
-
-function allocate_place(coord) {
-    // All devs
-    for(let i = 0; i < DEV_SPACES.length; i++){
-        let coords1 = DEV_SPACES[i];
-
-        // Find DEV SPACES
-        for (let ds = 0; ds < DEV_SPACES.length; ds++){
-            if(ds === i)
-                continue;
-            let coords2 = DEV_SPACES[ds];
-            if(is_adjacent(coords1, coords2)){
-                for (let ss = 0; ss < SCORE_BOARD.length; ss++){
-                    let data = SCORE_BOARD[ss];
-                    // NOTE: Contains only works for strings after JS2016. Else use indexOf()
-                    if(!data.used && data.person1.includes('D') && data.person2.includes('D')){
-                        data['used'] = true;
-                        devs[data.person1.substring(1)].positionX = coords1[0]
-                        devs[data.person1.substring(1)].positionY = coords1[1]
-                        devs[data.person2.substring(1)].positionX = coords2[0]
-                        devs[data.person2.substring(1)].positionY = coords2[1]
-                        data['p1'] = coords1;
-                        data['p2'] = coords2;
-                        break;
-                    }
-                }
-            }
-        }
-
-        // Find MAN SPACES
-        for (let ds = 0; ds < MAN_SPACES.length; ds++){
-            let coords2 = MAN_SPACES[ds];
-            if(is_adjacent(coords1, coords2)){
-                for (let ss = 0; ss < SCORE_BOARD.length; ss++){
-                    let data = SCORE_BOARD[ss];
-                    // NOTE: Contains only works for strings after JS2016. Else use indexOf()
-                    if(!data.used && data.person1.includes('D') && data.person2.includes('M')){
-                        data['used'] = true;
-                        devs[data.person1.substring(1)].positionX = coords1[0]
-                        devs[data.person1.substring(1)].positionY = coords1[1]
-                        mgrs[data.person2.substring(1)].positionX = coords2[0]
-                        mgrs[data.person2.substring(1)].positionY = coords2[1]
-                        data['p1'] = coords1;
-                        data['p2'] = coords2;
-                        break;
-                    }
-                }
-            }
-        }
-    }
 }
 
 function is_valid(x, y) {
