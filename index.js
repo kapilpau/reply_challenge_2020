@@ -10,7 +10,7 @@ let DEV_SPACES = [];
 let MAN_SPACES = [];
 let C, R;
 
-let SCORE_BOARD = {};
+let SCORE_BOARD = [];
 
 try {
     // read contents of the file
@@ -28,13 +28,27 @@ try {
 
     for(let i = 1; i<=Number(lines[line_pointer]); i++) {
         let dev = lines[line_pointer + i].split(" ");
-        devs.push({
+        let devObj = {
             company: dev[0],
             bonus: dev[1],
             skills: dev.splice(3),
-            id: 'D' + i - 1,
-            position: "X"
-        })
+            id: `D${i - 1}`,
+            positionX: Number.MIN_SAFE_INTEGER,
+            positionY: Number.MIN_SAFE_INTEGER,
+        };
+        devs.push(devObj)
+    }
+
+    for (let i = 0; i<devs.length-1; i++) {
+        let dev1 = devs[i];
+        for (let j = i+1; j<devs.length; j++) {
+            let dev2 = devs[j];
+            SCORE_BOARD.push({
+                person1: dev1.id,
+                person2: dev2.id,
+                score: getTP(dev1, dev2)
+            })
+        }
     }
 
     line_pointer = Number(lines[line_pointer]) + line_pointer + 1;
@@ -42,24 +56,50 @@ try {
 
     for(let i = 1; i<=Number(lines[line_pointer]); i++) {
         let mgr = lines[line_pointer + i].split(" ");
-        mgrs.push({
+        let mgrObj = {
             company: mgr[0],
             bonus: mgr[1],
-            id: 'M' + i - 1,
+            id: `M${i - 1}`,
             positionX: Number.MIN_SAFE_INTEGER,
-            positionY: Number.MIN_SAFE_INTEGER
-        });
+            positionY: Number.MIN_SAFE_INTEGER,
+        };
+        mgrs.push(mgrObj);
     }
 
+    for (let i = 0; i<mgrs.length-1; i++) {
+        let mgr1 = mgrs[i];
+        for (let j = i+1; j<mgrs.length; j++) {
+            let mgr2 = mgrs[j];
+            SCORE_BOARD.push({
+                person1: mgr1.id,
+                person2: mgr2.id,
+                score: getTP(mgr1, mgr2)
+            })
+        }
+    }
+
+    for (let i = 0; i<devs.length-1; i++) {
+        let dev = devs[i];
+        for (let j = 0; j < mgrs.length; j++){
+            let mgr = mgrs[j];
+            SCORE_BOARD.push({
+                person1: dev.id,
+                person2: mgr.id,
+                score: getTP(dev, mgr)
+            })
+        }
+    }
+
+
+    SCORE_BOARD = SCORE_BOARD.sort((a, b) => b.score - a.score);
 
     const logger = fs.createWriteStream('out.txt', {
         flags: 'a'
     });
 
-    console.log(getTP(devs[0], mgrs[0]))
 
-    devs.forEach(dev => logger.write(dev.position + "\r\n"));
-    mgrs.forEach(mgr => logger.write(mgr.position + "\r\n"));
+    devs.forEach(dev => logger.write(dev.positionX > -1 && dev.positionY > -1 ? `${dev.positionX} ${dev.positionY}` : "X" + "\r\n"));
+    mgrs.forEach(mgr => logger.write(mgr.positionX > -1 && mgr.positionY > -1 ? `${mgr.positionX} ${mgr.positionY}` : "X" + "\r\n"));
 } catch (err) {
     console.error(err);
 }
