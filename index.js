@@ -8,6 +8,7 @@ let mgrs = [];
 let MAP = []; // Will be an Array of Arrays (2D Array effectively)
 let DEV_SPACES = [];
 let MAN_SPACES = [];
+let ALLOCATIONS = [];
 let C, R;
 
 let SCORE_BOARD = [];
@@ -135,24 +136,169 @@ function create_map(r, c, lines){
     for(let i = 0; i < r; i++){
         map[i] = new Array(c);
         for(let j = 0; j < c; j++){
-            map[i][j] = lines[i + 1].charAt(j);
+            let c = lines[i + 1].charAt(j);
+            if(c === '_')
+                DEV_SPACES.push([i, j]);
+            else if(c === 'M')
+                MAN_SPACES.push([i, j]);
+            map[i][j] = c;
         }
     }
 
     console.log(map);
-    console.log("MAP(0,0) = ", map[0][0]);
+    console.log("MAN_SPACES = ", MAN_SPACES);
+    console.log("DEV_SPACES = ", DEV_SPACES);
     return map;
 }
 
-function create_scoreboard() {
+allocate();
 
+function allocate(){
+    let MAX_I = Math.max(MAN_SPACES.length, DEV_SPACES.length);
+    let greater_arr = MAN_SPACES.length > DEV_SPACES.length ? MAN_SPACES : DEV_SPACES;
+    let MIN_J = Math.min(MAN_SPACES.length, DEV_SPACES.length);
+    let lesser_arr = MAN_SPACES.length < DEV_SPACES.length ? MAN_SPACES : DEV_SPACES;
+
+    // TODO seated
+
+    // All devs
+    for(let i = 0; i < DEV_SPACES.length; i++){
+        let coords1 = DEV_SPACES[i];
+
+        // Find DEV SPACES
+        for (let ds = 0; ds < DEV_SPACES.length; ds++){
+            if(ds === i)
+                continue;
+            let coords2 = DEV_SPACES[ds];
+            if(is_adjacent(coords1, coords2)){
+                for (let ss = 0; ss < SCORE_BOARD.length; ss++){
+                    let data = SCORE_BOARD[ss];
+                    // NOTE: Contains only works for strings after JS2016. Else use indexOf()
+                    if(!data.used && data.person1.includes('D') && data.person2.includes('D')){
+                        data['used'] = true;
+                        data['p1'] = coords1;
+                        data['p2'] = coords2;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Find MAN SPACES
+        for (let ds = 0; ds < MAN_SPACES.length; ds++){
+            let coords2 = MAN_SPACES[ds];
+            if(is_adjacent(coords1, coords2)){
+                for (let ss = 0; ss < SCORE_BOARD.length; ss++){
+                    let data = SCORE_BOARD[ss];
+                    // NOTE: Contains only works for strings after JS2016. Else use indexOf()
+                    if(!data.used && data.person1.includes('D') && data.person2.includes('M')){
+                        data['used'] = true;
+                        data['p1'] = coords1;
+                        data['p2'] = coords2;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // All mans
+    for(let i = 0; i < MAN_SPACES.length; i++){
+        let coords1 = MAN_SPACES[i];
+
+        // Find DEV SPACES
+        for (let ds = 0; ds < DEV_SPACES.length; ds++){
+            if(ds === i)
+                continue;
+            let coords2 = DEV_SPACES[ds];
+            if(is_adjacent(coords1, coords2)){
+                for (let ss = 0; ss < SCORE_BOARD.length; ss++){
+                    let data = SCORE_BOARD[ss];
+                    // NOTE: Contains only works for strings after JS2016. Else use indexOf()
+                    if(!data.used && data.person1.includes('M') && data.person2.includes('D')){
+                        data['used'] = true;
+                        data['p1'] = coords1;
+                        data['p2'] = coords2;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Find MAN SPACES
+        for (let ds = 0; ds < MAN_SPACES.length; ds++){
+            let coords2 = MAN_SPACES[ds];
+            if(is_adjacent(coords1, coords2)){
+                for (let ss = 0; ss < SCORE_BOARD.length; ss++){
+                    let data = SCORE_BOARD[ss];
+                    // NOTE: Contains only works for strings after JS2016. Else use indexOf()
+                    if(!data.used && data.person1.includes('M') && data.person2.includes('M')){
+                        data['used'] = true;
+                        data['p1'] = coords1;
+                        data['p2'] = coords2;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+
+    console.log(SCORE_BOARD);
+    // console.log(is_adjacent(MAN_SPACES[0], DEV_SPACES[0])); // true
+    // console.log(is_adjacent(MAN_SPACES[1], DEV_SPACES[1])); // false
+    // console.log(is_adjacent(MAN_SPACES[1], DEV_SPACES[2])); // true
+}
+
+function allocate_place(coord) {
+    // All devs
+    for(let i = 0; i < DEV_SPACES.length; i++){
+        let coords1 = DEV_SPACES[i];
+
+        // Find DEV SPACES
+        for (let ds = 0; ds < DEV_SPACES.length; ds++){
+            if(ds === i)
+                continue;
+            let coords2 = DEV_SPACES[ds];
+            if(is_adjacent(coords1, coords2)){
+                for (let ss = 0; ss < SCORE_BOARD.length; ss++){
+                    let data = SCORE_BOARD[ss];
+                    // NOTE: Contains only works for strings after JS2016. Else use indexOf()
+                    if(!data.used && data.person1.includes('D') && data.person2.includes('D')){
+                        data['used'] = true;
+                        data['p1'] = coords1;
+                        data['p2'] = coords2;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Find MAN SPACES
+        for (let ds = 0; ds < MAN_SPACES.length; ds++){
+            let coords2 = MAN_SPACES[ds];
+            if(is_adjacent(coords1, coords2)){
+                for (let ss = 0; ss < SCORE_BOARD.length; ss++){
+                    let data = SCORE_BOARD[ss];
+                    // NOTE: Contains only works for strings after JS2016. Else use indexOf()
+                    if(!data.used && data.person1.includes('D') && data.person2.includes('M')){
+                        data['used'] = true;
+                        data['p1'] = coords1;
+                        data['p2'] = coords2;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 function is_valid(x, y) {
     return (x => 0 && x < R && y >= 0 && y < C);
 }
 
-function is_adjacent(x1, y1, x2, y2) {
+function is_adjacent(coords1, coords2) {
+    let [[x1, y1], [x2, y2]] = [coords1, coords2] ;
     if(is_valid(x2, y2 + 1) && x2 === x1 && (y2 + 1) === y1)
         return true;
     else if(is_valid(x2, y2 - 1) && x2 === x1 && (y2 - 1) === y1)
