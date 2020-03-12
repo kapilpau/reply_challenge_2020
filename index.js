@@ -52,6 +52,8 @@ try {
         flags: 'a'
     });
 
+    console.log(getTP(devs[0], mgrs[0]))
+
     devs.forEach(dev => logger.write(dev.position + "\r\n"));
     mgrs.forEach(mgr => logger.write(mgr.position + "\r\n"));
 } catch (err) {
@@ -59,6 +61,8 @@ try {
 }
 
 function getWP(dev1, dev2) {
+    if (!(dev1.type === "D" && dev2.type === "D"))
+        return 0;
     let totalJointSkillScore = dev1.skills.length + dev2.skills.length;
     let totalDistinctSkillScore = dev1.skills.length + dev2.skills.length;
 
